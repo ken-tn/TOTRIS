@@ -67,19 +67,6 @@ void ATOTRISGameModeBase::DrawPiece()
 
 ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 {
-	/*FActorSpawnParameters SpawnInfo;
-	FTransform SpawnTransform = FTransform(FVector(0, x * 200, (BOARD_HEIGHT-y) * 200));
-	AStaticMeshActor* NewCube = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), SpawnTransform, SpawnInfo);
-	NewCube->SetMobility(EComponentMobility::Movable);
-	NewCube->SetActorEnableCollision(false);
-
-	UStaticMeshComponent* StaticMesh = NewCube->GetStaticMeshComponent();
-	StaticMesh->SetStaticMesh(UCubeMesh);
-	StaticMesh->SetCollisionProfileName(FName("NoCollision"), false);
-	StaticMesh->SetGenerateOverlapEvents(false);
-	StaticMesh->CastShadow = false;
-
-	StaticMesh->SetMaterial(0, );*/
 	ACube* Cube = GetWorld()->SpawnActor<ACube>(ACube::StaticClass());
 	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh);
 
