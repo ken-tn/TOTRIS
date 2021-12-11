@@ -2,15 +2,14 @@
 
 
 #include "TOTRISGameModeBase.h"
-#include "Engine/StaticMeshActor.h"
 #include <ControllerPawn.h>
 
 void ATOTRISGameModeBase::GenerateBoard()
 {
-	for (int i = 0; i < BOARD_SIZE[0]; i++)
+	for (int i = 0; i < BOARD_WIDTH; i++)
 	{
 		TArray<int> Row;
-		for (int h = 0; h < BOARD_SIZE[1]; h++)
+		for (int h = 0; h < BOARD_HEIGHT; h++)
 		{
 			Row.Add(0);
 		}
@@ -19,11 +18,28 @@ void ATOTRISGameModeBase::GenerateBoard()
 	}
 }
 
+void ATOTRISGameModeBase::RenderBoard()
+{
+	for (auto row : BOARD)
+	{
+		for (auto val : BOARD)
+		{
+
+		}
+	}
+}
+
 void ATOTRISGameModeBase::GameTick()
 {
 	for (auto cube : CURRENTPIECE)
 	{
 		cube->SetActorLocation(cube->GetActorLocation() - FVector(FVector(0, 0, 200)));
+		cube->y += 1;
+		if (cube->y == 20) //temporary test
+		{
+			DrawPiece();
+			return;
+		}
 	}
 }
 
@@ -31,7 +47,7 @@ void ATOTRISGameModeBase::DrawPiece()
 {
 	Piece Cubes;
 	Shape shape = tetris_shapes[FMath::RandRange(0, 5)];
-	int x = BOARD_SIZE[0] / 2 - shape[0].Num() / 2;
+	int x = BOARD_WIDTH / 2 - shape[0].Num() / 2;
 	int y = 0;
 	for (int rowIndex = 0; rowIndex < shape.Num(); rowIndex++)
 	{
@@ -49,10 +65,10 @@ void ATOTRISGameModeBase::DrawPiece()
 	CURRENTPIECE = Cubes;
 }
 
-AActor* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
+ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 {
-	FActorSpawnParameters SpawnInfo;
-	FTransform SpawnTransform = FTransform(FVector(0, x * 200, (BOARD_SIZE[1]-y) * 200));
+	/*FActorSpawnParameters SpawnInfo;
+	FTransform SpawnTransform = FTransform(FVector(0, x * 200, (BOARD_HEIGHT-y) * 200));
 	AStaticMeshActor* NewCube = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), SpawnTransform, SpawnInfo);
 	NewCube->SetMobility(EComponentMobility::Movable);
 	NewCube->SetActorEnableCollision(false);
@@ -63,14 +79,16 @@ AActor* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 	StaticMesh->SetGenerateOverlapEvents(false);
 	StaticMesh->CastShadow = false;
 
-	StaticMesh->SetMaterial(0, TMaterialInstances[colour]);
+	StaticMesh->SetMaterial(0, );*/
+	ACube* Cube = GetWorld()->SpawnActor<ACube>(ACube::StaticClass());
+	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh);
 
-	return NewCube;
+	return Cube;
 }
 
 void ATOTRISGameModeBase::RotateClockwise()
 {
-	UE_LOG(LogTemp, Warning, TEXT("hehe"));
+	
 	return;
 }
 
@@ -109,7 +127,7 @@ void ATOTRISGameModeBase::BeginPlay()
 	UE_LOG(LogTemp, Display, TEXT("Board Generated"));
 	GenerateBoard();
 
-	DrawCube(0, 0, 0); // reference cube
+	//DrawCube(0, 0, 0); // reference cube
 	DrawPiece();
 }
 

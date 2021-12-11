@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Materials/MaterialInstanceConstant.h"
+#include "Cube.h"
 #include "GameFramework/GameModeBase.h"
 #include "TOTRISGameModeBase.generated.h"
 
-#define Piece TArray<AActor*>
+#define Piece TArray<ACube*>
 #define Shape TArray<TArray<int>>
 
 /**
@@ -18,17 +19,19 @@ class TOTRIS_API ATOTRISGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-	int FRAMES_PER_TICK = 30;
-	TArray<int> BOARD_SIZE = { 10, 20 };
+public:
+	static const int FRAMES_PER_TICK = 15;
+	static const int BOARD_WIDTH = 10;
+	static const int BOARD_HEIGHT = 20;
+	static const int CUBE_SIZE = 200;
+
+private:
 	TArray<TArray<int>> BOARD;
+	TArray<TArray<int>> PREVBOARD;
 	Piece CURRENTPIECE;
-
 	int frame = 0;
-	UPROPERTY(VisibleAnywhere)
-		int CubeSize = 200;
-	UStaticMesh* UCubeMesh;
 
-	TArray<Shape> tetris_shapes =
+	const TArray<Shape> tetris_shapes =
 	{
 		{{1, 1, 1},
 		 {0, 1, 0}},
@@ -51,7 +54,7 @@ class TOTRIS_API ATOTRISGameModeBase : public AGameModeBase
 		 {7, 7}}
 	};
 
-	TArray<FString> TMaterialReferences = {
+	const TArray<FString> TMaterialReferences = {
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Red.MI_CarPaint_Red'"),
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Orange.MI_CarPaint_Orange'"),
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_LightBlue.MI_CarPaint_LightBlue'"),
@@ -61,13 +64,15 @@ class TOTRIS_API ATOTRISGameModeBase : public AGameModeBase
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Mix_02.MI_CarPaint_Mix_02'")
 	};
 
-	TArray<UMaterialInstance*> TMaterialInstances;
+	UStaticMesh* UCubeMesh;
+	TArray<UMaterialInstanceConstant*> TMaterialInstances;
 
 	void GenerateBoard();
+	void RenderBoard();
 	void GameTick();
 	void DrawPiece();
 	
-	AActor* DrawCube(int x, int y, int colour);
+	ACube* DrawCube(int x, int y, int colour);
 
 public:
 	void RotateClockwise();

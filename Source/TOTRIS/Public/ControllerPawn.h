@@ -18,6 +18,16 @@ public:
 	AControllerPawn();
 
 protected:
+	UPROPERTY(EditAnywhere)
+		class USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(EditAnywhere)
+		class UCameraComponent* CameraComp;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* StaticMeshComp;
+
+protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

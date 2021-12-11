@@ -2,6 +2,8 @@
 
 
 #include "ControllerPawn.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 #include <TOTRIS/TOTRISGameModeBase.h>
 
 // Sets default values
@@ -10,6 +12,25 @@ AControllerPawn::AControllerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	//Create our components
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComponent"));
+	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
+	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+
+	//Attach our components
+	StaticMeshComp->SetupAttachment(RootComponent);
+	SpringArmComp->SetupAttachment(StaticMeshComp);
+	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
+
+	//Move camera
+	StaticMeshComp->SetWorldTransform(FTransform(FVector(-4690.000000, 730.000000, 2110.000000)));
+
+	//Assign SpringArm class variables.
+	//SpringArmComp->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, 50.0f), FRotator(-60.0f, 0.0f, 0.0f));
+	SpringArmComp->TargetArmLength = 400.f;
+	SpringArmComp->bEnableCameraLag = true;
+	SpringArmComp->CameraLagSpeed = 3.0f;
 }
 
 #pragma region Inputs
