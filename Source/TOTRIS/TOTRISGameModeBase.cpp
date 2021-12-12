@@ -4,27 +4,40 @@
 #include "TOTRISGameModeBase.h"
 #include <ControllerPawn.h>
 
-bool ATOTRISGameModeBase::CheckCollision(FVector2D PosOffset)
+bool ATOTRISGameModeBase::IsCollision(FVector2D Pos)
 {
-	for (ACube* Cube : CURRENTPIECE)
+	int X = Pos.X;
+	int Y = Pos.Y;
+	if (BOARD.IsValidIndex(X))
 	{
-		int offx = Cube->x + PosOffset.X;
-		int offy = Cube->y + PosOffset.Y;
-		if (BOARD.IsValidIndex(offx))
+		if (BOARD[X].IsValidIndex(Y))
 		{
-			if (BOARD[offx].IsValidIndex(offy))
-			{
-				if (BOARD[offx][offy] != 0)
-				{
-					return true;
-				}
-			}
-			else
+			if (BOARD[X][Y] != 0)
 			{
 				return true;
 			}
 		}
 		else
+		{
+			return true;
+		}
+	}
+	else
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool ATOTRISGameModeBase::IsPieceColliding(FVector2D Offset)
+{
+	for (ACube* Cube : CURRENTPIECE)
+	{
+		int offx = Cube->x + Offset.X;
+		int offy = Cube->y + Offset.Y;
+		
+		if (IsCollision(FVector2D(offx, offy)))
 		{
 			return true;
 		}
@@ -62,7 +75,7 @@ bool ATOTRISGameModeBase::Move(FVector2D Offset)
 {
 	if (GAME_STATE != GAME_OVER && GAME_STATE != GAME_PAUSED)
 	{
-		if (!CheckCollision(Offset))
+		if (!IsPieceColliding(Offset))
 		{
 			for (ACube* Cube : CURRENTPIECE)
 			{
@@ -116,7 +129,7 @@ void ATOTRISGameModeBase::DrawPiece()
 	}
 
 	CURRENTPIECE = Cubes;
-	if (CheckCollision(FVector2D(0, 1)))
+	if (IsPieceColliding(FVector2D(0, 1)))
 	{
 		GAME_STATE = GAME_OVER;
 	}
@@ -130,13 +143,64 @@ ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 	return Cube;
 }
 
+Shape ATOTRISGameModeBase::RotateMatrix(Shape shape)
+{
+	Shape rotatedMatrix;
+	for (int x = shape[0].Num() - 1; x > -1; x--)
+	{
+		TArray<int> l;
+		for (int y = 0; y < shape.Num(); y++)
+		{
+			l.Add(shape[y][x]);
+		}
+		rotatedMatrix.Add(l);
+	}
+
+	return rotatedMatrix;
+}
+
 void ATOTRISGameModeBase::RotateClockwise()
 {
+	int rotations = (CURRENTPIECE[0]->rotations + 1) % 4;
+	Shape shape = tetris_shapes[CURRENTPIECE[0]->col-1];
+	for (int i = 0; i < rotations; i++) {
+		shape = RotateMatrix(shape);
+	}
+
+	int offx = CURRENTPIECE[0]->x;
+	int offy = CURRENTPIECE[0]->y;
+	TMap<FVector2D, int> NewCubePositions;
+	for (int rowIndex = 0; rowIndex < shape.Num(); rowIndex++)
+	{
+		TArray<int> row = shape[rowIndex];
+		for (int colIndex = 0; colIndex < row.Num(); colIndex++)
+		{
+			int colour = row[colIndex];
+			if (colour != 0)
+			{
+				FVector2D newPos = FVector2D(rowIndex + offx, colIndex + offy);
+				if (IsCollision(newPos))
+				{
+					return;
+				}
+				NewCubePositions.Add(newPos, colour);
+			}
+		}
+	}
 
 	for (ACube* Cube : CURRENTPIECE)
 	{
-		Cube->RecalculateTransform();
+		Cube->Destroy();
 	}
+
+	Piece Cubes;
+	for (TPair<FVector2D, int> CubeData : NewCubePositions)
+	{
+		Cubes.Add(DrawCube(CubeData.Key.X, CubeData.Key.Y, CubeData.Value));
+	}
+
+	CURRENTPIECE = Cubes;
+	CURRENTPIECE[0]->rotations = rotations;
 
 	return;
 }

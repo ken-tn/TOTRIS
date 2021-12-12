@@ -71,11 +71,13 @@ private:
 	UStaticMesh* UCubeMesh;
 	TArray<UMaterialInstanceConstant*> TMaterialInstances;
 
-	bool CheckCollision(FVector2D PosOffset);
+	bool IsCollision(FVector2D Pos);
+	bool IsPieceColliding(FVector2D PosOffset);
 	void GenerateBoard();
 	void RenderBoard();
 	void GameTick();
 	void DrawPiece();
+	Shape RotateMatrix(Shape shape);
 	
 	ACube* DrawCube(int x, int y, int colour);
 

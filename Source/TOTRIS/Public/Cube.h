@@ -25,6 +25,7 @@ public:
 		int col;
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* StaticMesh;
+	int rotations = 0;
 
 	void Init(FVector2D pos, UMaterialInstanceConstant* Material, UStaticMesh* CubeMesh, int colour);
 	void RecalculateTransform();
