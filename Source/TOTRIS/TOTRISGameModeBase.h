@@ -80,6 +80,7 @@ private:
 	ACube* DrawCube(int x, int y, int colour);
 
 public:
+	void TogglePause();
 	void RotateClockwise();
 	bool Move(FVector2D Offset);
 

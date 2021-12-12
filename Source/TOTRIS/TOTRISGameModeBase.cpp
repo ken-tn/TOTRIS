@@ -171,6 +171,11 @@ void ATOTRISGameModeBase::PostLogin(APlayerController* NewPlayer)
 	NewPlayer->Possess(Pawn);
 }
 
+void ATOTRISGameModeBase::TogglePause()
+{
+	GAME_STATE = GAME_STATE ? GAME_RUNNING : GAME_PAUSED;
+}
+
 void ATOTRISGameModeBase::BeginPlay()
 {
 	GAME_STATE = GAME_RUNNING;

@@ -57,6 +57,10 @@ void AControllerPawn::OnKeyDown(FKey Key)
 	{
 		gm->Move(FVector2D(0, 1));
 	}
+	else if (KeyName == "escape")
+	{
+		gm->TogglePause();
+	}
 }
 #pragma endregion Inputs
 
