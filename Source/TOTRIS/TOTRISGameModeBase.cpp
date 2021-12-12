@@ -173,7 +173,10 @@ void ATOTRISGameModeBase::PostLogin(APlayerController* NewPlayer)
 
 void ATOTRISGameModeBase::TogglePause()
 {
-	GAME_STATE = GAME_STATE ? GAME_RUNNING : GAME_PAUSED;
+	if (GAME_STATE != GAME_OVER)
+	{
+		GAME_STATE = GAME_STATE ? GAME_RUNNING : GAME_PAUSED;
+	}
 }
 
 void ATOTRISGameModeBase::BeginPlay()
