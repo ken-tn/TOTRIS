@@ -23,7 +23,7 @@ class TOTRIS_API ATOTRISGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	static const int FRAMES_PER_TICK = 15;
+	static const int FRAMES_PER_TICK = 30;
 	static const int BOARD_WIDTH = 10;
 	static const int BOARD_HEIGHT = 20;
 	static const int CUBE_SIZE = 200;
@@ -74,7 +74,6 @@ private:
 	bool IsCollision(FVector2D Pos);
 	bool IsPieceColliding(FVector2D PosOffset);
 	void GenerateBoard();
-	void RenderBoard();
 	void GameTick();
 	void DrawPiece();
 	Shape RotateMatrix(Shape shape);

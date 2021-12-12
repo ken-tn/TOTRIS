@@ -60,17 +60,6 @@ void ATOTRISGameModeBase::GenerateBoard()
 	}
 }
 
-void ATOTRISGameModeBase::RenderBoard()
-{
-	/*for (auto row : BOARD)
-	{
-		for (auto val : BOARD)
-		{
-
-		}
-	}*/
-}
-
 bool ATOTRISGameModeBase::Move(FVector2D Offset)
 {
 	if (GAME_STATE != GAME_OVER && GAME_STATE != GAME_PAUSED)
