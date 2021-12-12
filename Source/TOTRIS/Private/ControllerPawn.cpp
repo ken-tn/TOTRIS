@@ -38,12 +38,24 @@ void AControllerPawn::OnKeyDown(FKey Key)
 {
 	const FString KeyName = *Key.GetDisplayName().ToString().ToLower();
 	//UE_LOG(LogTemp, Display, TEXT("Key: %s"), *KeyName);
+	ATOTRISGameModeBase* gm = Cast<ATOTRISGameModeBase>(GetWorld()->GetAuthGameMode()); // no client/server lol
 	if (KeyName == "up")
 	{
-		ATOTRISGameModeBase* gm = Cast<ATOTRISGameModeBase>(GetWorld()->GetAuthGameMode()); // no client/server lol
 		gm->RotateClockwise();
 
 		return;
+	}
+	else if (KeyName == "left")
+	{
+		gm->Move(FVector2D(-1, 0));
+	}
+	else if (KeyName == "right")
+	{
+		gm->Move(FVector2D(1, 0));
+	}
+	else if (KeyName == "down")
+	{
+		gm->Move(FVector2D(0, 1));
 	}
 }
 #pragma endregion Inputs

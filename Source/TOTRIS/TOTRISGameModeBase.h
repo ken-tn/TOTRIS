@@ -10,6 +10,9 @@
 
 #define Piece TArray<ACube*>
 #define Shape TArray<TArray<int>>
+#define GAME_RUNNING 0
+#define GAME_PAUSED 1
+#define GAME_OVER 2
 
 /**
  * 
@@ -24,10 +27,11 @@ public:
 	static const int BOARD_WIDTH = 10;
 	static const int BOARD_HEIGHT = 20;
 	static const int CUBE_SIZE = 200;
+	int GAME_STATE;
 
 private:
 	TArray<TArray<int>> BOARD;
-	TArray<TArray<int>> PREVBOARD;
+	//TArray<TArray<int>> PREVBOARD;
 	Piece CURRENTPIECE;
 	int frame = 0;
 
@@ -67,6 +71,7 @@ private:
 	UStaticMesh* UCubeMesh;
 	TArray<UMaterialInstanceConstant*> TMaterialInstances;
 
+	bool CheckCollision(FVector2D PosOffset);
 	void GenerateBoard();
 	void RenderBoard();
 	void GameTick();
@@ -76,6 +81,7 @@ private:
 
 public:
 	void RotateClockwise();
+	bool Move(FVector2D Offset);
 
 public:
 	ATOTRISGameModeBase();

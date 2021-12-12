@@ -22,14 +22,20 @@ ACube::ACube()
 	StaticMesh->CastShadow = false;
 }
 
-void ACube::Init(FVector2D pos, UMaterialInstanceConstant* Material, UStaticMesh* CubeMesh)
+void ACube::Init(FVector2D pos, UMaterialInstanceConstant* Material, UStaticMesh* CubeMesh, int colour)
 {
 	x = pos.X;
 	y = pos.Y;
-	
-	RootComponent->SetWorldTransform(FTransform(FVector(0, x * 200, (ATOTRISGameModeBase::BOARD_HEIGHT - y) * ATOTRISGameModeBase::CUBE_SIZE)));
+	col = colour;
+
+	RecalculateTransform();
 	StaticMesh->SetStaticMesh(CubeMesh);
 	StaticMesh->SetMaterial(0, Material);
+}
+
+void ACube::RecalculateTransform()
+{
+	RootComponent->SetWorldTransform(FTransform(FVector(0, x * 200, (ATOTRISGameModeBase::BOARD_HEIGHT - y) * ATOTRISGameModeBase::CUBE_SIZE)));
 }
 
 // Called when the game starts or when spawned

@@ -4,6 +4,35 @@
 #include "TOTRISGameModeBase.h"
 #include <ControllerPawn.h>
 
+bool ATOTRISGameModeBase::CheckCollision(FVector2D PosOffset)
+{
+	for (ACube* Cube : CURRENTPIECE)
+	{
+		int offx = Cube->x + PosOffset.X;
+		int offy = Cube->y + PosOffset.Y;
+		if (BOARD.IsValidIndex(offx))
+		{
+			if (BOARD[offx].IsValidIndex(offy))
+			{
+				if (BOARD[offx][offy] != 0)
+				{
+					return true;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 void ATOTRISGameModeBase::GenerateBoard()
 {
 	for (int i = 0; i < BOARD_WIDTH; i++)
@@ -20,26 +49,51 @@ void ATOTRISGameModeBase::GenerateBoard()
 
 void ATOTRISGameModeBase::RenderBoard()
 {
-	for (auto row : BOARD)
+	/*for (auto row : BOARD)
 	{
 		for (auto val : BOARD)
 		{
 
 		}
+	}*/
+}
+
+bool ATOTRISGameModeBase::Move(FVector2D Offset)
+{
+	if (GAME_STATE != GAME_OVER && GAME_STATE != GAME_PAUSED)
+	{
+		if (!CheckCollision(Offset))
+		{
+			for (ACube* Cube : CURRENTPIECE)
+			{
+				Cube->x += Offset.X;
+				Cube->y += Offset.Y;
+				Cube->RecalculateTransform();
+			}
+
+			return true;
+		}
 	}
+
+	return false;
 }
 
 void ATOTRISGameModeBase::GameTick()
 {
-	for (auto cube : CURRENTPIECE)
+	if (GAME_STATE == GAME_OVER || GAME_STATE == GAME_PAUSED)
 	{
-		cube->SetActorLocation(cube->GetActorLocation() - FVector(FVector(0, 0, 200)));
-		cube->y += 1;
-		if (cube->y == 20) //temporary test
+		return;
+	}
+
+	if (!Move(FVector2D(0, 1)))
+	{
+		for (ACube* Cube : CURRENTPIECE)
 		{
-			DrawPiece();
-			return;
+			BOARD[Cube->x][Cube->y] = Cube->col;
 		}
+
+		DrawPiece();
+		return;
 	}
 }
 
@@ -48,7 +102,6 @@ void ATOTRISGameModeBase::DrawPiece()
 	Piece Cubes;
 	Shape shape = tetris_shapes[FMath::RandRange(0, 5)];
 	int x = BOARD_WIDTH / 2 - shape[0].Num() / 2;
-	int y = 0;
 	for (int rowIndex = 0; rowIndex < shape.Num(); rowIndex++)
 	{
 		TArray<int> row = shape[rowIndex];
@@ -57,25 +110,34 @@ void ATOTRISGameModeBase::DrawPiece()
 			int colour = row[colIndex];
 			if (colour != 0) // where there is a colour
 			{
-				Cubes.Add(DrawCube(rowIndex + x, colIndex + y, colour));
+				Cubes.Add(DrawCube(rowIndex + x, colIndex, colour));
 			}
 		}
 	}
 
 	CURRENTPIECE = Cubes;
+	if (CheckCollision(FVector2D(0, 1)))
+	{
+		GAME_STATE = GAME_OVER;
+	}
 }
 
 ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 {
 	ACube* Cube = GetWorld()->SpawnActor<ACube>(ACube::StaticClass());
-	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh);
+	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh, colour);
 
 	return Cube;
 }
 
 void ATOTRISGameModeBase::RotateClockwise()
 {
-	
+
+	for (ACube* Cube : CURRENTPIECE)
+	{
+		Cube->RecalculateTransform();
+	}
+
 	return;
 }
 
@@ -84,7 +146,7 @@ ATOTRISGameModeBase::ATOTRISGameModeBase()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 
-	for (auto FMaterialReference : TMaterialReferences)
+	for (FString FMaterialReference : TMaterialReferences)
 	{
 		const TCHAR* text = *FMaterialReference;
 		ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant>MaterialAsset(text);
@@ -111,10 +173,8 @@ void ATOTRISGameModeBase::PostLogin(APlayerController* NewPlayer)
 
 void ATOTRISGameModeBase::BeginPlay()
 {
-	UE_LOG(LogTemp, Display, TEXT("Board Generated"));
+	GAME_STATE = GAME_RUNNING;
 	GenerateBoard();
-
-	//DrawCube(0, 0, 0); // reference cube
 	DrawPiece();
 }
 

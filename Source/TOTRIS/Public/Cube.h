@@ -22,9 +22,12 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		int y;
 	UPROPERTY(VisibleAnywhere)
+		int col;
+	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* StaticMesh;
 
-	void Init(FVector2D pos, UMaterialInstanceConstant* Material, UStaticMesh* CubeMesh);
+	void Init(FVector2D pos, UMaterialInstanceConstant* Material, UStaticMesh* CubeMesh, int colour);
+	void RecalculateTransform();
 
 protected:
 	void init();
