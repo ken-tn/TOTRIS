@@ -120,8 +120,13 @@ void ATOTRISGameModeBase::GameTick()
 					BOARDCUBES[colIndex][rowIndex]->Destroy();
 
 					int currRow = rowIndex - 1;
-					while (BOARD[colIndex][currRow] != 0)
+					while (currRow > 0)
 					{
+						if (BOARD[colIndex][currRow] == 0)
+						{
+							currRow--;
+							continue;
+						}
 						BOARD[colIndex][currRow + 1] = BOARD[colIndex][currRow]; // shift down
 						BOARD[colIndex][currRow] = 0; // set to 0
 
