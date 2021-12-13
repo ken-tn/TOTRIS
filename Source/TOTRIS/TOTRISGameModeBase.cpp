@@ -155,7 +155,21 @@ ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 
 Shape ATOTRISGameModeBase::RotateMatrix(Shape shape)
 {
+	//Transpose
+	//Reverse each row
 	Shape rotatedMatrix;
+	for (int x = 0; x < shape[0].Num(); x++)
+	{
+		TArray<int> row;
+		for (int y = shape.Num()-1; y > -1; y--)
+		{
+			row.Add(shape[y][x]);
+		}
+		rotatedMatrix.Add(row);
+	}
+
+	/*
+	anti-clockwise pain
 	for (int x = shape[0].Num() - 1; x > -1; x--)
 	{
 		TArray<int> l;
@@ -164,7 +178,7 @@ Shape ATOTRISGameModeBase::RotateMatrix(Shape shape)
 			l.Add(shape[y][x]);
 		}
 		rotatedMatrix.Add(l);
-	}
+	}*/
 
 	return rotatedMatrix;
 }
@@ -267,7 +281,7 @@ void ATOTRISGameModeBase::BeginPlay()
 {
 	GAME_STATE = GAME_RUNNING;
 	GenerateBoard();
-	DrawPiece(3);
+	DrawPiece(6);
 }
 
 // Called every frame
