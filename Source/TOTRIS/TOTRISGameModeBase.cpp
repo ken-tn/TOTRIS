@@ -148,7 +148,8 @@ void ATOTRISGameModeBase::DrawPiece(const int& shapeIndex)
 ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 {
 	ACube* Cube = GetWorld()->SpawnActor<ACube>(ACube::StaticClass());
-	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh, colour);
+	// we need colour to be offset by 1 so collision works
+	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh, colour + 1);
 
 	return Cube;
 }
@@ -185,10 +186,9 @@ Shape ATOTRISGameModeBase::RotateMatrix(Shape shape)
 
 void ATOTRISGameModeBase::RotateClockwise()
 {
-	int pivotIndex = 0;
-	ACube* pivot = CURRENTPIECE[pivotIndex];
+	ACube* pivot = CURRENTPIECE[0];
 	int rotations = (pivot->rotations + 1) % 4;
-	int colour = pivot->col;
+	int colour = pivot->col - 1;
 	Shape shape = tetris_shapes[colour];
 	for (int i = 0; i < rotations; i++) {
 		shape = RotateMatrix(shape);
@@ -228,7 +228,7 @@ void ATOTRISGameModeBase::RotateClockwise()
 	}
 
 	CURRENTPIECE = Cubes;
-	CURRENTPIECE[pivotIndex]->rotations = rotations;
+	CURRENTPIECE[0]->rotations = rotations;
 
 	return;
 }
@@ -281,7 +281,7 @@ void ATOTRISGameModeBase::BeginPlay()
 {
 	GAME_STATE = GAME_RUNNING;
 	GenerateBoard();
-	DrawPiece(6);
+	DrawPiece();
 }
 
 // Called every frame
