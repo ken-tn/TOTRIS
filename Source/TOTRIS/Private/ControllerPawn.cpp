@@ -22,6 +22,8 @@ AControllerPawn::AControllerPawn()
 	StaticMeshComp->SetupAttachment(RootComponent);
 	SpringArmComp->SetupAttachment(StaticMeshComp);
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
+	CameraComp->SetProjectionMode(ECameraProjectionMode::Orthographic);
+	CameraComp->OrthoWidth = 9000.f;
 
 	//Move camera
 	StaticMeshComp->SetWorldTransform(FTransform(FVector(-4690.000000, 730.000000, 2110.000000)));

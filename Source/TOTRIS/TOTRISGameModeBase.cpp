@@ -51,12 +51,14 @@ void ATOTRISGameModeBase::GenerateBoard()
 	for (int i = 0; i < BOARD_WIDTH; i++)
 	{
 		TArray<int> Row;
+		TArray<ACube*> CubeRow;
 		for (int h = 0; h < BOARD_HEIGHT; h++)
 		{
 			Row.Add(0);
 		}
 
 		BOARD.Add(Row);
+		BOARDCUBES.Add(CubeRow);
 	}
 }
 
@@ -94,25 +96,45 @@ void ATOTRISGameModeBase::GameTick()
 			BOARD[Cube->x][Cube->y] = Cube->col;
 		}
 
+		/*
+		for (int row : BOARD)
+		{
+			for (int val : row)
+			{
+				if (val == 0)
+				{
+					continue;
+				}
+
+				for (int val : row)
+				{
+					val = 0;
+
+					//BOARDCUBES.
+				}
+			}
+		}
+		*/
+
 		DrawPiece();
 		return;
 	}
 }
 
-void ATOTRISGameModeBase::DrawPiece()
+void ATOTRISGameModeBase::DrawPiece(const int& shapeIndex)
 {
+	Shape shape = tetris_shapes[shapeIndex];
 	Piece Cubes;
-	Shape shape = tetris_shapes[FMath::RandRange(0, 5)];
 	int x = BOARD_WIDTH / 2 - shape[0].Num() / 2;
 	for (int rowIndex = 0; rowIndex < shape.Num(); rowIndex++)
 	{
 		TArray<int> row = shape[rowIndex];
 		for (int colIndex = 0; colIndex < row.Num(); colIndex++)
 		{
-			int colour = row[colIndex];
-			if (colour != 0) // where there is a colour
+			if (row[colIndex] != 0) // where there is a colour
 			{
-				Cubes.Add(DrawCube(rowIndex + x, colIndex, colour));
+				UE_LOG(LogTemp, Warning, TEXT("%d %d %d %d"), rowIndex + x, colIndex, shapeIndex, x);
+				Cubes.Add(DrawCube(rowIndex + x, colIndex, shapeIndex));
 			}
 		}
 	}
@@ -127,7 +149,8 @@ void ATOTRISGameModeBase::DrawPiece()
 ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 {
 	ACube* Cube = GetWorld()->SpawnActor<ACube>(ACube::StaticClass());
-	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh, colour);
+	UE_LOG(LogTemp, Warning, TEXT("Colour: %d"), colour);
+	Cube->Init(FVector2D(x, y), *TMaterialInstances.Find(colour), UCubeMesh, colour);
 
 	return Cube;
 }
@@ -150,22 +173,27 @@ Shape ATOTRISGameModeBase::RotateMatrix(Shape shape)
 
 void ATOTRISGameModeBase::RotateClockwise()
 {
-	int rotations = (CURRENTPIECE[0]->rotations + 1) % 4;
-	Shape shape = tetris_shapes[CURRENTPIECE[0]->col-1];
+	int pivotIndex = 0;
+	ACube* pivot = CURRENTPIECE[pivotIndex];
+	int rotations = (pivot->rotations + 1) % 4;
+	int colour = pivot->col;
+	Shape shape = tetris_shapes[colour];
 	for (int i = 0; i < rotations; i++) {
 		shape = RotateMatrix(shape);
 	}
 
-	int offx = CURRENTPIECE[0]->x;
-	int offy = CURRENTPIECE[0]->y;
+	FVector2D offset = pivotOffsets[colour][rotations];
+	int offx = pivot->x + offset.X;
+	int offy = pivot->y + offset.Y;
+	UE_LOG(LogTemp, Warning, TEXT("%d %d %d %d"), colour, rotations, offset.X, offset.Y);
+
 	TMap<FVector2D, int> NewCubePositions;
 	for (int rowIndex = 0; rowIndex < shape.Num(); rowIndex++)
 	{
 		TArray<int> row = shape[rowIndex];
 		for (int colIndex = 0; colIndex < row.Num(); colIndex++)
 		{
-			int colour = row[colIndex];
-			if (colour != 0)
+			if (row[colIndex] != 0)
 			{
 				FVector2D newPos = FVector2D(rowIndex + offx, colIndex + offy);
 				if (IsCollision(newPos))
@@ -189,7 +217,7 @@ void ATOTRISGameModeBase::RotateClockwise()
 	}
 
 	CURRENTPIECE = Cubes;
-	CURRENTPIECE[0]->rotations = rotations;
+	CURRENTPIECE[pivotIndex]->rotations = rotations;
 
 	return;
 }
@@ -199,14 +227,20 @@ ATOTRISGameModeBase::ATOTRISGameModeBase()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 
-	for (FString FMaterialReference : TMaterialReferences)
+	for (TPair<int, FString> FMaterialReference : TMaterialReferences)
 	{
-		const TCHAR* text = *FMaterialReference;
+		const TCHAR* text = *FMaterialReference.Value;
 		ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant>MaterialAsset(text);
 
 		if (MaterialAsset.Object != nullptr)
 		{
-			TMaterialInstances.Add(MaterialAsset.Object);
+			UE_LOG(LogTemp, Display, TEXT("LOADED MATERIAL: %s"), text);
+			TMaterialInstances.Add(FMaterialReference.Key, MaterialAsset.Object);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("MISSING MATERIAL: % s"), text);
+			PrimaryActorTick.bCanEverTick = false;
 		}
 	}
 
@@ -236,7 +270,7 @@ void ATOTRISGameModeBase::BeginPlay()
 {
 	GAME_STATE = GAME_RUNNING;
 	GenerateBoard();
-	DrawPiece();
+	DrawPiece(3);
 }
 
 // Called every frame
