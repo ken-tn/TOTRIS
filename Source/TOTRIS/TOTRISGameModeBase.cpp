@@ -113,6 +113,7 @@ void ATOTRISGameModeBase::GameTick()
 			if (!found)
 			{
 				UE_LOG(LogTemp, Display, TEXT("ROW CLEAR: %d"), rowIndex);
+				FRAMES_PER_TICK--;
 				for (int colIndex = 0; colIndex < BOARD_WIDTH; colIndex++)
 				{
 					BOARD[colIndex][rowIndex] = 0;

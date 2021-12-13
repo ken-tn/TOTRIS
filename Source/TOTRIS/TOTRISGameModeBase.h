@@ -23,7 +23,7 @@ class TOTRIS_API ATOTRISGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	static const int FRAMES_PER_TICK = 30;
+	int FRAMES_PER_TICK = 30;
 	static const int BOARD_WIDTH = 10;
 	static const int BOARD_HEIGHT = 20;
 	static const int CUBE_SIZE = 200;
@@ -72,7 +72,7 @@ private:
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Red.MI_CarPaint_Red'"),
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Orange.MI_CarPaint_Orange'"),
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_LightBlue.MI_CarPaint_LightBlue'"),
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CaliperPaint/MI_Caliper_Yellow.MI_Caliper_Yellow'"),
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Plum.MI_CarPaint_Plum'"),
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_White.MI_CarPaint_White'"),
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Interior/CarbonFiber/MI_CarbonFiber.MI_CarbonFiber'"),
 		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Mix_02.MI_CarPaint_Mix_02'")
