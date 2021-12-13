@@ -54,6 +54,7 @@ void ATOTRISGameModeBase::GenerateBoard()
 		TArray<ACube*> CubeRow;
 		for (int h = 0; h < BOARD_HEIGHT; h++)
 		{
+			CubeRow.Add(nullptr);
 			Row.Add(0);
 		}
 
@@ -94,27 +95,46 @@ void ATOTRISGameModeBase::GameTick()
 		for (ACube* Cube : CURRENTPIECE)
 		{
 			BOARD[Cube->x][Cube->y] = Cube->col;
+			BOARDCUBES[Cube->x][Cube->y] = Cube;
 		}
 
-		/*
-		for (int row : BOARD)
+		// update board
+		for (int rowIndex = 0; rowIndex < BOARD_HEIGHT; rowIndex++)
 		{
-			for (int val : row)
+			bool found = false;
+			for (int colIndex = 0; colIndex < BOARD_WIDTH; colIndex++)
 			{
-				if (val == 0)
+				if (BOARD[colIndex][rowIndex] == 0)
 				{
-					continue;
+					found = true;
 				}
+			}
 
-				for (int val : row)
+			if (!found)
+			{
+				UE_LOG(LogTemp, Display, TEXT("ROW CLEAR: %d"), rowIndex);
+				for (int colIndex = 0; colIndex < BOARD_WIDTH; colIndex++)
 				{
-					val = 0;
+					BOARD[colIndex][rowIndex] = 0;
+					BOARDCUBES[colIndex][rowIndex]->Destroy();
 
-					//BOARDCUBES.
+					int currRow = rowIndex - 1;
+					while (BOARD[colIndex][currRow] != 0)
+					{
+						BOARD[colIndex][currRow + 1] = BOARD[colIndex][currRow]; // shift down
+						BOARD[colIndex][currRow] = 0; // set to 0
+
+						ACube* CubeAbove = BOARDCUBES[colIndex][currRow];
+						CubeAbove->y += 1;
+						CubeAbove->RecalculateTransform();
+						BOARDCUBES[colIndex][currRow] = nullptr;
+						BOARDCUBES[colIndex][currRow + 1] = CubeAbove; // shift down
+
+						currRow--;
+					}
 				}
 			}
 		}
-		*/
 
 		DrawPiece();
 		return;
