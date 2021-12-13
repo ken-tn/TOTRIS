@@ -35,6 +35,8 @@ AControllerPawn::AControllerPawn()
 	SpringArmComp->CameraLagSpeed = 3.0f;
 }
 
+// todo: hold drop
+
 #pragma region Inputs
 void AControllerPawn::OnKeyDown(FKey Key)
 {
@@ -64,6 +66,17 @@ void AControllerPawn::OnKeyDown(FKey Key)
 		gm->TogglePause();
 	}
 }
+
+void AControllerPawn::OnKeyUp(FKey Key)
+{
+	const FString KeyName = *Key.GetDisplayName().ToString().ToLower();
+	//UE_LOG(LogTemp, Display, TEXT("Key: %s"), *KeyName);
+	ATOTRISGameModeBase* gm = Cast<ATOTRISGameModeBase>(GetWorld()->GetAuthGameMode()); // no client/server lol
+	if (KeyName == "down")
+	{
+		return;
+	}
+}
 #pragma endregion Inputs
 
 // Called when the game starts or when spawned
@@ -86,4 +99,5 @@ void AControllerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("KeyDown", IE_Pressed, this, &AControllerPawn::OnKeyDown);
+	PlayerInputComponent->BindAction("KeyUp", IE_Released, this, &AControllerPawn::OnKeyUp);
 }

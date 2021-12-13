@@ -12,6 +12,7 @@ class TOTRIS_API AControllerPawn : public APawn
 	GENERATED_BODY()
 
 	void OnKeyDown(FKey Key);
+	void OnKeyUp(FKey Key);
 
 public:
 	// Sets default values for this pawn's properties
