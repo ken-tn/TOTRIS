@@ -23,7 +23,7 @@ class TOTRIS_API ATOTRISGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	static const int FRAMES_PER_TICK = 120;
+	static const int FRAMES_PER_TICK = 1800;
 	static const int BOARD_WIDTH = 10;
 	static const int BOARD_HEIGHT = 20;
 	static const int CUBE_SIZE = 200;
@@ -58,10 +58,10 @@ private:
 		 {7, 7}}
 	};
 
-	const TArray<TArray<FVector2D>> pivotOffsets = { 
-		{FVector2D(1,0), FVector2D(-1,1), FVector2D(), FVector2D()},
-		{FVector2D(1,0), FVector2D(-1,0), FVector2D(1,0), FVector2D(-1,0)},
-		{FVector2D(1,-1), FVector2D(-1,1), FVector2D(1,-1), FVector2D(-1,1)},
+	const TArray<TArray<FVector2D>> NESOffsets = { 
+		{FVector2D(-1,1), FVector2D(1,-1), FVector2D(-1,0), FVector2D(-1,0)},
+		{FVector2D(-1,1), FVector2D(0,-1), FVector2D(-1,1), FVector2D(0,-1)},
+		{FVector2D(-2,1), FVector2D(1,-1), FVector2D(-2,1), FVector2D(1,-1)},
 		{FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0)},
 		{FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0)},
 		{FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0)},

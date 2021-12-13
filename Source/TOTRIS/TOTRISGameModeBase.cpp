@@ -133,8 +133,7 @@ void ATOTRISGameModeBase::DrawPiece(const int& shapeIndex)
 		{
 			if (row[colIndex] != 0) // where there is a colour
 			{
-				UE_LOG(LogTemp, Warning, TEXT("%d %d %d %d"), rowIndex + x, colIndex, shapeIndex, x);
-				Cubes.Add(DrawCube(rowIndex + x, colIndex, shapeIndex));
+				Cubes.Add(DrawCube(colIndex + x, rowIndex, shapeIndex));
 			}
 		}
 	}
@@ -181,10 +180,9 @@ void ATOTRISGameModeBase::RotateClockwise()
 		shape = RotateMatrix(shape);
 	}
 
-	FVector2D offset = pivotOffsets[colour][rotations];
+	FVector2D offset = NESOffsets[colour][rotations];
 	int offx = pivot->x + offset.X;
 	int offy = pivot->y + offset.Y;
-	UE_LOG(LogTemp, Warning, TEXT("%d %d %d %d"), colour, rotations, offset.X, offset.Y);
 
 	TMap<FVector2D, int> NewCubePositions;
 	for (int rowIndex = 0; rowIndex < shape.Num(); rowIndex++)
@@ -194,7 +192,7 @@ void ATOTRISGameModeBase::RotateClockwise()
 		{
 			if (row[colIndex] != 0)
 			{
-				FVector2D newPos = FVector2D(rowIndex + offx, colIndex + offy);
+				FVector2D newPos = FVector2D(colIndex + offx, rowIndex + offy);
 				if (IsCollision(newPos))
 				{
 					return;
