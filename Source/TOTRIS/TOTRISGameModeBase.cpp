@@ -149,8 +149,7 @@ void ATOTRISGameModeBase::DrawPiece(const int& shapeIndex)
 ACube* ATOTRISGameModeBase::DrawCube(int x, int y, int colour)
 {
 	ACube* Cube = GetWorld()->SpawnActor<ACube>(ACube::StaticClass());
-	UE_LOG(LogTemp, Warning, TEXT("Colour: %d"), colour);
-	Cube->Init(FVector2D(x, y), *TMaterialInstances.Find(colour), UCubeMesh, colour);
+	Cube->Init(FVector2D(x, y), TMaterialInstances[colour], UCubeMesh, colour);
 
 	return Cube;
 }
@@ -227,15 +226,15 @@ ATOTRISGameModeBase::ATOTRISGameModeBase()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 
-	for (TPair<int, FString> FMaterialReference : TMaterialReferences)
+	for (FString FMaterialReference : TMaterialReferences)
 	{
-		const TCHAR* text = *FMaterialReference.Value;
+		const TCHAR* text = *FMaterialReference;
 		ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant>MaterialAsset(text);
 
 		if (MaterialAsset.Object != nullptr)
 		{
 			UE_LOG(LogTemp, Display, TEXT("LOADED MATERIAL: %s"), text);
-			TMaterialInstances.Add(FMaterialReference.Key, MaterialAsset.Object);
+			TMaterialInstances.Add(MaterialAsset.Object);
 		}
 		else
 		{

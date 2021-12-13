@@ -68,19 +68,19 @@ private:
 		{FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0)}
 	};
 
-	const TMap<int, FString> TMaterialReferences = {
-		{0, FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Red.MI_CarPaint_Red'")},
-		{1, FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Orange.MI_CarPaint_Orange'")},
-		{2, FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_LightBlue.MI_CarPaint_LightBlue'")},
-		{3, FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CaliperPaint/MI_Caliper_Yellow.MI_Caliper_Yellow'")},
-		{4, FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_White.MI_CarPaint_White'")},
-		{5, FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Interior/CarbonFiber/MI_CarbonFiber.MI_CarbonFiber'")},
-		{6, FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Mix_02.MI_CarPaint_Mix_02'")}
+	const TArray<FString> TMaterialReferences = {
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Red.MI_CarPaint_Red'"),
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Orange.MI_CarPaint_Orange'"),
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_LightBlue.MI_CarPaint_LightBlue'"),
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CaliperPaint/MI_Caliper_Yellow.MI_Caliper_Yellow'"),
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_White.MI_CarPaint_White'"),
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Interior/CarbonFiber/MI_CarbonFiber.MI_CarbonFiber'"),
+		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Mix_02.MI_CarPaint_Mix_02'")
 	};
 
 	UStaticMesh* UCubeMesh;
 	UPROPERTY(VisibleAnywhere)
-		TMap<int, UMaterialInstanceConstant*> TMaterialInstances;
+		TArray<UMaterialInstanceConstant*> TMaterialInstances;
 
 	bool IsCollision(FVector2D Pos);
 	bool IsPieceColliding(FVector2D PosOffset);
