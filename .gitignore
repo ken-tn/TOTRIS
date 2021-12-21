@@ -14,3 +14,4 @@ Content/AutomotiveMaterials/
 *.xcodeproj
 *.xcworkspace
 Content/Levels/Start_BuiltData.uasset
+/Build/WindowsNoEditor/FileOpenOrder
