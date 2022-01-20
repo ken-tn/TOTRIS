@@ -69,13 +69,13 @@ private:
 	};
 
 	const TArray<FString> TMaterialReferences = {
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Red.MI_CarPaint_Red'"),
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Orange.MI_CarPaint_Orange'"),
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_LightBlue.MI_CarPaint_LightBlue'"),
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Plum.MI_CarPaint_Plum'"),
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_White.MI_CarPaint_White'"),
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Interior/CarbonFiber/MI_CarbonFiber.MI_CarbonFiber'"),
-		FString("MaterialInstanceConstant'/Game/AutomotiveMaterials/Materials/Exterior/CarPaint/MI_CarPaint_Mix_02.MI_CarPaint_Mix_02'")
+		FString("MaterialInstanceConstant'/Game/Material/One.One'"),
+		FString("MaterialInstanceConstant'/Game/Material/Two.Two'"),
+		FString("MaterialInstanceConstant'/Game/Material/Three.Three'"),
+		FString("MaterialInstanceConstant'/Game/Material/Four.Four'"),
+		FString("MaterialInstanceConstant'/Game/Material/Five.Five'"),
+		FString("MaterialInstanceConstant'/Game/Material/Six.Six'"),
+		FString("MaterialInstanceConstant'/Game/Material/Seven.Seven'")
 	};
 
 	UStaticMesh* UCubeMesh;
